@@ -1,0 +1,28 @@
+name: Build W5500 EVB Pico2
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install toolchain
+        run: sudo apt-get install -y gcc-arm-none-eabi cmake python3
+
+      - name: Build mpy-cross
+        run: make -C mpy-cross
+
+      - name: Build firmware
+        run: |
+          cd ports/rp2
+          make BOARD=W5500_EVB_PICO2 submodules
+          make BOARD=W5500_EVB_PICO2
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-w5500-evb-pico2
+          path: ports/rp2/build-W5500_EVB_PICO2/firmware.uf2
