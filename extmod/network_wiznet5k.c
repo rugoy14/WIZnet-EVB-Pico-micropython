@@ -833,6 +833,7 @@ static mp_obj_t wiznet5k_isconnected(mp_obj_t self_in) {
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(wiznet5k_isconnected_obj, wiznet5k_isconnected);
 
+// FONCTION ACTIVE MODIFIEE POUR RP2350 - NE BLOQUE PLUS
 static mp_obj_t wiznet5k_active(size_t n_args, const mp_obj_t *args) {
     wiznet5k_obj_t *self = MP_OBJ_TO_PTR(args[0]);
     if (n_args == 1) {
@@ -843,9 +844,9 @@ static mp_obj_t wiznet5k_active(size_t n_args, const mp_obj_t *args) {
                 /*!< Wiznet initialisation */
                 // Reset the chip
                 mp_hal_pin_low(wiznet5k_obj.rst);
-                mp_hal_delay_ms(50); // datasheet says 2us
+                mp_hal_delay_ms(50);
                 mp_hal_pin_high(wiznet5k_obj.rst);
-                mp_hal_delay_ms(500); // datasheet says 150ms
+                mp_hal_delay_ms(500);
 
                 // Set physical interface callbacks
                 reg_wizchip_cris_cbfunc(wiz_cris_enter, wiz_cris_exit);
@@ -855,6 +856,16 @@ static mp_obj_t wiznet5k_active(size_t n_args, const mp_obj_t *args) {
 
                 // Configure lwip/provided specific settings
                 wiznet5k_init();
+                
+                // FORCER L'ACTIVATION SANS ATTENDRE LA REPONSE DU W5500
+                #if WIZNET5K_PROVIDED_STACK
+                self->active = true;
+                #endif
+                
+                #if WIZNET5K_WITH_LWIP_STACK
+                netif_set_up(&self->netif);
+                netif_set_link_up(&self->netif);
+                #endif
 
                 // If the device doesn't have a MAC address then set one
                 #if WIZNET5K_WITH_LWIP_STACK
@@ -872,9 +883,7 @@ static mp_obj_t wiznet5k_active(size_t n_args, const mp_obj_t *args) {
                 netif_create_ip6_linklocal_address(&self->netif, 1);
                 #endif
 
-                // seems we need a small delay after init
-                mp_hal_delay_ms(250);
-
+                mp_hal_delay_ms(100);
             }
         } else {
             #if WIZNET5K_WITH_LWIP_STACK
