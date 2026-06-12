@@ -15,14 +15,52 @@ jobs:
       - name: Create W5500_EVB_PICO2 board
         run: |
           cp -r ports/rp2/boards/W5500_EVB_PICO ports/rp2/boards/W5500_EVB_PICO2
-          echo "=== mpconfigboard.cmake ===" 
-          cat ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
-          echo "=== mpconfigboard.h ==="
-          cat ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
-          echo "=== RPI_PICO2 cmake ==="
-          cat ports/rp2/boards/RPI_PICO2/mpconfigboard.cmake
-          echo "=== RPI_PICO2 h ==="
-          cat ports/rp2/boards/RPI_PICO2/mpconfigboard.h
+          cat > lib/pico-sdk/src/boards/include/boards/wiznet_w5500_evb_pico2.h << 'EOF'
+          // pico_cmake_set PICO_PLATFORM=rp2350
+          #ifndef _BOARDS_WIZNET_W5500_EVB_PICO2_H
+          #define _BOARDS_WIZNET_W5500_EVB_PICO2_H
+          #define RASPBERRYPI_PICO2
+          #define PICO_RP2350A 1
+          #ifndef PICO_DEFAULT_UART
+          #define PICO_DEFAULT_UART 0
+          #endif
+          #ifndef PICO_DEFAULT_UART_TX_PIN
+          #define PICO_DEFAULT_UART_TX_PIN 0
+          #endif
+          #ifndef PICO_DEFAULT_UART_RX_PIN
+          #define PICO_DEFAULT_UART_RX_PIN 1
+          #endif
+          #ifndef PICO_DEFAULT_LED_PIN
+          #define PICO_DEFAULT_LED_PIN 25
+          #endif
+          #ifndef PICO_DEFAULT_SPI
+          #define PICO_DEFAULT_SPI 0
+          #endif
+          #ifndef PICO_DEFAULT_SPI_SCK_PIN
+          #define PICO_DEFAULT_SPI_SCK_PIN 18
+          #endif
+          #ifndef PICO_DEFAULT_SPI_TX_PIN
+          #define PICO_DEFAULT_SPI_TX_PIN 19
+          #endif
+          #ifndef PICO_DEFAULT_SPI_RX_PIN
+          #define PICO_DEFAULT_SPI_RX_PIN 16
+          #endif
+          #ifndef PICO_DEFAULT_SPI_CSN_PIN
+          #define PICO_DEFAULT_SPI_CSN_PIN 17
+          #endif
+          #define PICO_BOOT_STAGE2_CHOOSE_W25Q080 1
+          #ifndef PICO_FLASH_SPI_CLKDIV
+          #define PICO_FLASH_SPI_CLKDIV 2
+          #endif
+          #ifndef PICO_FLASH_SIZE_BYTES
+          #define PICO_FLASH_SIZE_BYTES (2 * 1024 * 1024)
+          #endif
+          #ifndef PICO_RP2350_A2_SUPPORTED
+          #define PICO_RP2350_A2_SUPPORTED 1
+          #endif
+          #endif
+          EOF
+          sed -i 's/set(PICO_BOARD "pico2")/set(PICO_BOARD wiznet_w5500_evb_pico2)/' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
 
       - name: Build mpy-cross
         run: make -C mpy-cross
@@ -33,7 +71,7 @@ jobs:
           make BOARD=W5500_EVB_PICO2 submodules
           make BOARD=W5500_EVB_PICO2
 
-      - name: Upload firmware 
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: firmware-w5500-evb-pico2
