@@ -15,9 +15,11 @@ jobs:
       - name: Create W5500_EVB_PICO2 board
         run: |
           cp -r ports/rp2/boards/W5500_EVB_PICO ports/rp2/boards/W5500_EVB_PICO2
-          sed -i 's/wiznet_w5100s_evb_pico/pico2/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
+          sed -i 's/wiznet_w5100s_evb_pico/wiznet_w5500_evb_pico2/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
           sed -i 's/W5500-EVB-Pico"/W5500-EVB-Pico2"/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
-          echo 'set(PICO_STDIO_USB 1)' >> ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
+          cp lib/pico-sdk/src/boards/include/boards/wiznet_w5500_evb_pico.h lib/pico-sdk/src/boards/include/boards/wiznet_w5500_evb_pico2.h
+          sed -i 's/RP2040/RP2350/g' lib/pico-sdk/src/boards/include/boards/wiznet_w5500_evb_pico2.h
+          sed -i 's/rp2040/rp2350/g' lib/pico-sdk/src/boards/include/boards/wiznet_w5500_evb_pico2.h
 
       - name: Build mpy-cross
         run: make -C mpy-cross
