@@ -16,8 +16,6 @@ jobs:
         run: |
           cp -r ports/rp2/boards/W5500_EVB_PICO ports/rp2/boards/W5500_EVB_PICO2
           sed -i 's/wiznet_w5100s_evb_pico/pico2/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
-          sed -i 's/W5500-EVB-Pico"/W5500-EVB-Pico2"/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
-          echo '#define MICROPY_HW_USB_CDC (1)' >> ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
 
       - name: Build mpy-cross
         run: make -C mpy-cross
