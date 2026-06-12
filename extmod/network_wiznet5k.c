@@ -843,9 +843,9 @@ static mp_obj_t wiznet5k_active(size_t n_args, const mp_obj_t *args) {
                 /*!< Wiznet initialisation */
                 // Reset the chip
                 mp_hal_pin_low(wiznet5k_obj.rst);
-                mp_hal_delay_ms(1); // datasheet says 2us
+                mp_hal_delay_ms(50); // datasheet says 2us
                 mp_hal_pin_high(wiznet5k_obj.rst);
-                mp_hal_delay_ms(160); // datasheet says 150ms
+                mp_hal_delay_ms(500); // datasheet says 150ms
 
                 // Set physical interface callbacks
                 reg_wizchip_cris_cbfunc(wiz_cris_enter, wiz_cris_exit);
