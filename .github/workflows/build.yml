@@ -33,7 +33,7 @@ jobs:
           make BOARD=W5500_EVB_PICO2 submodules
           make BOARD=W5500_EVB_PICO2
 
-      - name: Upload firmware
+      - name: Upload firmware 
         uses: actions/upload-artifact@v4
         with:
           name: firmware-w5500-evb-pico2
