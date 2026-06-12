@@ -15,6 +15,14 @@ jobs:
       - name: Create W5500_EVB_PICO2 board
         run: |
           cp -r ports/rp2/boards/W5500_EVB_PICO ports/rp2/boards/W5500_EVB_PICO2
+          echo "=== mpconfigboard.cmake ===" 
+          cat ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
+          echo "=== mpconfigboard.h ==="
+          cat ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
+          echo "=== RPI_PICO2 cmake ==="
+          cat ports/rp2/boards/RPI_PICO2/mpconfigboard.cmake
+          echo "=== RPI_PICO2 h ==="
+          cat ports/rp2/boards/RPI_PICO2/mpconfigboard.h
 
       - name: Build mpy-cross
         run: make -C mpy-cross
