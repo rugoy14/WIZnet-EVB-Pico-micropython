@@ -17,7 +17,7 @@ jobs:
           cp -r ports/rp2/boards/W5500_EVB_PICO ports/rp2/boards/W5500_EVB_PICO2
           sed -i 's/wiznet_w5100s_evb_pico/pico2/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
           sed -i 's/W5500-EVB-Pico"/W5500-EVB-Pico2"/g' ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
-          echo 'target_compile_definitions(usermod INTERFACE MICROPY_HW_USB_CDC=1)' >> ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.cmake
+          echo '#define MICROPY_HW_USB_CDC (1)' >> ports/rp2/boards/W5500_EVB_PICO2/mpconfigboard.h
 
       - name: Build mpy-cross
         run: make -C mpy-cross
@@ -30,3 +30,6 @@ jobs:
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
+        with:
+          name: firmware-w5500-evb-pico2
+          path: ports/rp2/build-W5500_EVB_PICO2/firmware.uf2
